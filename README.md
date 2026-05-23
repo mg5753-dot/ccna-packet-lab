@@ -21,7 +21,7 @@ This lab simulates that environment end-to-end in Cisco Packet Tracer.
 |------|---------|
 | HQ | 2911 Router, 2960 Switch, 3x PCs |
 | Branch | 2911 Router, 3560 MLS (Core), 2x 2960 Switches, 2x Servers, 4x PCs |
-| Simulated Internet | ISP Router with loopback (203.0.113.100) |
+| Simulated Internet | ISP Router with loopback (203.0.113.0) |
 
 ---
 
@@ -45,6 +45,7 @@ This lab simulates that environment end-to-end in Cisco Packet Tracer.
 | 10 | Management | 192.168.10.0/24 | 192.168.10.1 | .10 – .50 |
 | 20 | Sales | 192.168.20.0/24 | 192.168.20.1 | .10 – .50 |
 | 30 | IT | 192.168.30.0/24 | 192.168.30.1 | .10 – .50 |
+| 40 | Servers | 192.168.40.0/24 | 192.168.40.1 | Static |
 
 ### Servers
 
@@ -167,6 +168,9 @@ SVIs on a multilayer switch keep inter-VLAN traffic off the router entirely, red
 
 **Why /30 subnets on WAN links?**  
 Point-to-point links only need two usable host addresses. Using /30 conserves address space and is standard practice.
+
+**Why /24 subnets on VLANs?**  
+Using best practice for flexibility in case there is any need for expansion in the future.
 
 ---
 
