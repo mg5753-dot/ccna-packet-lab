@@ -257,10 +257,10 @@ interface vlan 20
 ## Design Decisions
 
 **Why a GRE tunnel instead of a direct cable between HQ and Branch?**  
-A direct physical link would have been a simplification too far removed from reality. A GRE tunnel running over the simulated ISP demonstrates the actual concept used in real WAN deployments — the two routers behave as if directly connected while traffic is encapsulated across the provider network. Full GRE-over-IPsec was considered but left out since CCNA only requires conceptual understanding of IPsec, not hands-on configuration, and Packet Tracer's IPsec support is inconsistent.
+A direct physical link would have been a simplification I felt. A GRE tunnel running over the simulated ISP demonstrates the actual concept used in real WAN deployments — the two routers behave as if directly connected while traffic is encapsulated across the provider network. Full GRE-over-IPsec was considered but left out given Packet Tracer's IPsec support seemed non-existent.
 
 **Why OSPF on the Core switch instead of static routes on BR-RTR?**  
-Running OSPF on the Core switch is more realistic for an enterprise environment and demonstrates configuring OSPF on a multilayer switch, not just routers.
+Felt an OSPF on the Core switch is more realistic for an enterprise environment and demonstrates configuring OSPF on a multilayer switch, not just routers.
 
 **Why a dedicated Server VLAN (40)?**  
 Separating servers into their own VLAN allows independent ACL policies on server traffic, follows standard network segmentation practice, and avoids servers being affected by port security rules meant for end-user devices.
@@ -269,7 +269,7 @@ Separating servers into their own VLAN allows independent ACL policies on server
 Reflects IT's role managing the network and servers. In a real enterprise this would typically be scoped further — limited to specific management protocols (RDP/3389, WinRM/5985, SSH/22, SMB/445) rather than full IP access, following least-privilege principles. Full access was used here for lab simplicity since Packet Tracer's PCs don't run any services to actually demonstrate scoped remote management against.
 
 **Why don't Sales/Management get ping replies back when IT initiates contact?**  
-The ACLs are stateless — a deny rule blocking traffic in one direction also blocks the reply, since the reply itself matches the same source/destination pair. This was a deliberate scope decision: fixing it fully requires something stateful (reflexive ACLs or a zone-based firewall), both beyond CCNA's hands-on scope. A narrow ICMP echo-reply permit would patch ping specifically but not other protocols, so it was left out entirely rather than implemented halfway.
+The ACLs are stateless — a deny rule blocking traffic in one direction also blocks the reply, since the reply itself matches the same source/destination pair. This was a deliberate scope decision: fixing it fully requires something stateful (reflexive ACLs or a zone-based firewall), so perhaps if I come back to this I may implement but for the purposes of this lab to show my understanding of CCNA priciples I left it out. A narrow ICMP echo-reply permit would patch ping specifically but not other protocols, so I left it out entirely as I felt it would have been halfway to actually setting up a reflexive ACL.
 
 **Why does the console line share the same AAA method list as SSH, instead of a dedicated local-only override?**  
 Once `aaa new-model` is enabled, any line without an explicit override inherits the `default` method list automatically — this is what caused a full lockout earlier in the build. The safer pattern is a dedicated method list (e.g. `aaa authentication login CONSOLE local`) applied directly to `line con 0`, bypassing TACACS+ entirely for console access. This was evaluated and intentionally deferred: the current setup is functional and TACACS+ has been reliable in testing, so the fix was deprioritized in favor of finishing the build. It remains a known, understood trade-off rather than an oversight.
@@ -282,9 +282,7 @@ Once `aaa new-model` is enabled, any line without an explicit override inherits 
 ## Known Gaps
 
 **Should fix before treating this as final:**
-- [ ] Apply `BLOCK_SALES` to the Core switch's VLAN 20 SVI (`ip access-group BLOCK_SALES in`) — defined but not enforced anywhere right now
-- [ ] Confirm whether Syslog forwarding (`logging 192.168.40.2` + `service timestamps log datetime msec`) was intentionally removed from both routers, or re-add it
-- [ ] Resolve the DNS permit protocol mismatch between `BLOCK_MANAGEMENT` (udp) and `BLOCK_SALES` (tcp) — test and make consistent
+- [ ] Appears `BLOCK_SALES` to the Core switch's VLAN 20 SVI (`ip access-group BLOCK_SALES in`) — defined but not showing in running config. However, it appears the ACL is working as it is working as intended given tested pings.
 
 **Deliberately deferred, not oversights (see Design Decisions):**
 - [ ] Console line under AAA uses the shared `default` method list rather than a dedicated local-only override
