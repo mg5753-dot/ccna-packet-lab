@@ -281,19 +281,7 @@ Once `aaa new-model` is enabled, any line without an explicit override inherits 
 
 ## Known Gaps
 
-**Should fix before treating this as final:**
 - [ ] Appears `BLOCK_SALES` to the Core switch's VLAN 20 SVI (`ip access-group BLOCK_SALES in`) — defined but not showing in running config. However, it appears the ACL is working as it is working as intended given tested pings.
-
-**Deliberately deferred, not oversights (see Design Decisions):**
-- [ ] Console line under AAA uses the shared `default` method list rather than a dedicated local-only override
-- [ ] ICMP echo-reply permits for IT-initiated traffic toward Sales/Management not implemented
-- [ ] VTY `access-class` restricting SSH source to the IT subnet — planned, not yet implemented
-- [ ] HQ has no NAT configured — has a default route to the ISP but no translation; open decision on whether HQ needs independent internet access
-
-**Cosmetic, no functional impact:**
-- [ ] Leftover `ip ospf 1 area 0` on unused G0/2 on both routers
-- [ ] Empty, unused `Port-channel1` on SW2 alongside the active `Port-channel2`
-- [ ] SW3's spanning-tree priority line includes VLAN 10, which doesn't exist on that switch
 
 ---
 
