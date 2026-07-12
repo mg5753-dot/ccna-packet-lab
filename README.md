@@ -221,22 +221,18 @@ interface GigabitEthernet0/0
  ip access-group BLOCK_MANAGEMENT in
 ```
 
-### ACL — BLOCK_SALES (SW3 — defined, not yet applied)
+### ACL — BLOCK_SALES (SW3)
 ```
 ip access-list extended BLOCK_SALES
- permit tcp 192.168.20.0 0.0.0.255 host 192.168.40.1 eq domain
+ permit udp 192.168.20.0 0.0.0.255 host 192.168.40.1 eq domain
  deny ip 192.168.20.0 0.0.0.255 192.168.30.0 0.0.0.255
  deny ip 192.168.20.0 0.0.0.255 192.168.40.0 0.0.0.255
  deny tcp 192.168.20.0 0.0.0.255 any eq 22
  permit ip any any
 
-! Still needed:
 interface vlan 20
  ip access-group BLOCK_SALES in
 ```
-> Note: this ACL's DNS permit uses `tcp`; BLOCK_MANAGEMENT's uses `udp`. Standard DNS client queries are UDP — worth testing (`ping srv1.branch.local` from a Sales PC) and making consistent.
-
----
 
 ## Verification
 
